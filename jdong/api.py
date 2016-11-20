@@ -87,3 +87,15 @@ class JDong(object):
         except Exception as e:
             print('发生错误在[JDong.get_color_size]时:{}\n请将报错内容提交到github:商品id{}'.format(e, product_id))
             exit()
+
+    def get_skuids(self, product_id):
+        """虽然是不同的id，但是是同一种商品
+        """
+        color_size = self.get_color_size(product_id)
+        skuids = []
+        for i in color_size:
+            try:
+                skuids.append(str(i['SkuId']))
+            except Exception as e:
+                pass
+        return skuids
