@@ -65,7 +65,25 @@ class JDong(object):
                 data = eval(data)
                 return data
             except Exception as e:
-                print('发生错误在解析评论时:{}\n请将报错内容提交到github:{}'.format(e,text))
+                print('发生错误在[JDong.comment]时:{}\n请将报错内容提交到github:评论text{}'.format(e, text))
                 exit()
         else:
             return {}
+
+    def get_color_size(self, product_id):
+        """同一种商品的不同分类
+        """
+        url = 'https://item.jd.com/{}.html'.format(product_id)
+        text = get(url)
+        text = text.replace(' ', '')
+        if 'colorSize:{}' in text or 'colorSize' not in text:
+            return []
+        try:
+            color_size = re.findall('colorSize(.*?)}],', text)[0]
+            color_size = color_size + '}]'
+            color_size = re.findall('\[(.*?)\]', color_size)[0]
+            color_size = '[' + color_size + ']'
+            return eval(color_size)
+        except Exception as e:
+            print('发生错误在[JDong.get_color_size]时:{}\n请将报错内容提交到github:商品id{}'.format(e, product_id))
+            exit()
