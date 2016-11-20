@@ -70,6 +70,12 @@ class JDong(object):
         else:
             return {}
 
+    def get_comment_page(self, product_id):
+        """获取评论页数
+        """
+        data = self.comment(product_id)
+        return data['maxPage'] if data else 0
+
     def get_color_size(self, product_id):
         """同一种商品的不同分类
         """
