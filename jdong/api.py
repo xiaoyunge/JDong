@@ -52,10 +52,20 @@ class JDong(object):
         """
         url = 'https://sclub.jd.com/comment/productPageComments.action?productId={}&score=0&sortType=3&' \
               'page={}&pageSize=10&callback=fetchJSON_comment98vv157'.format(product_id, page)
-        r = get(url)
-        data = re.findall('fetchJSON_comment98vv157\((.*?)\);', r)
-        data = data[0]
-        data = data.replace('null', '\'null\'')
-        data = data.replace('false', '\'false\'')
-        data = data.replace('true', '\'true\'')
-        data = eval(data)
+        text = get(url)
+        text = text.replace('javascript:void(0);', '')
+        data = re.findall('fetchJSON_comment98vv157\((.*?)\}\);', text)
+        if data:
+            try:
+                data = data[0] + '}'
+                data = data.replace(' ', '')
+                data = data.replace('":null', '":"null"')
+                data = data.replace('":false', '":"false"')
+                data = data.replace('":true', '":"true"')
+                data = eval(data)
+                return data
+            except Exception as e:
+                print('发生错误在解析评论时:{}\n请将报错内容提交到github:{}'.format(e,text))
+                exit()
+        else:
+            return {}
